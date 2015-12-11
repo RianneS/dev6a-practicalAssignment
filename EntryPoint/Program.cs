@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+//test comment!
+
 namespace EntryPoint
 {
 #if WINDOWS || LINUX
