@@ -43,13 +43,27 @@ namespace EntryPoint
     {
       Console.WriteLine("*R*: " + house);
       Console.WriteLine("*R*: " + specialBuildings);
-      
+
+      List<double> distances = CalculateEuclideanDistances(house, specialBuildings);
+      Console.WriteLine("*R*: ");
+      distances.ForEach(Console.WriteLine);
       
 
       return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }
 
-    private static Array MergeSort(Array A, int p, int r)
+    private static List<double> CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
+    {
+      List<double> distances = new List<double>();
+      foreach (Vector2 building in buildings)
+            {
+                double distance = Math.Sqrt((Math.Pow((house.X - building.X), 2) + (Math.Pow((house.Y - building.Y), 2))));
+                distances.Add(distance);
+            }
+      return distances;
+    }
+    
+    /*private static Array MergeSort(Array A, int p, int r)
     {
       if(p < r)
             {
@@ -59,12 +73,12 @@ namespace EntryPoint
                 Merge(A, p, q, r);
             }
       return A;
-    }
+    }*/
 
-    private Array Merge(Array A, int p, int q, int r)
+    /*private Array Merge(Array A, int p, int q, int r)
         {
             //TODO
-        }
+        }*/
 
     private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
       IEnumerable<Vector2> specialBuildings, 
