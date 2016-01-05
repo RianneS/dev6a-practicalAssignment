@@ -44,15 +44,17 @@ namespace EntryPoint
       Console.WriteLine("*R*: " + house);
       Console.WriteLine("*R*: " + specialBuildings);
 
-      List<double> distances = CalculateEuclideanDistances(house, specialBuildings);
+      double[] distances = CalculateEuclideanDistances(house, specialBuildings);
       Console.WriteLine("*R*: ");
-      distances.ForEach(Console.WriteLine);
-      
+      foreach (var item in distances)
+      {
+            Console.WriteLine(item);
+      }
 
       return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }
 
-    private static List<double> CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
+    private static double[] CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
     {
       List<double> distances = new List<double>();
       foreach (Vector2 building in buildings)
@@ -60,8 +62,8 @@ namespace EntryPoint
                 double distance = Math.Sqrt((Math.Pow((house.X - building.X), 2) + (Math.Pow((house.Y - building.Y), 2))));
                 distances.Add(distance);
             }
-      return distances;
-    }
+      return distances.ToArray();
+     }
     
     /*private static Array MergeSort(Array A, int p, int r)
     {
