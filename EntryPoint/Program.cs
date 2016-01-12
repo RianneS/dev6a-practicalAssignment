@@ -48,39 +48,74 @@ namespace EntryPoint
       Console.WriteLine("*R*: ");
       foreach (var item in distances)
       {
-            Console.WriteLine(item);
+        Console.WriteLine(item);
       }
+
+      MergeSort(distances, 0, distances.Length);
 
       return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }
+
+    //Methods added by me for Excercise 1:
 
     private static double[] CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
     {
       List<double> distances = new List<double>();
       foreach (Vector2 building in buildings)
-            {
-                double distance = Math.Sqrt((Math.Pow((house.X - building.X), 2) + (Math.Pow((house.Y - building.Y), 2))));
-                distances.Add(distance);
-            }
+        {
+            double distance = Math.Sqrt((Math.Pow((house.X - building.X), 2) + (Math.Pow((house.Y - building.Y), 2))));
+            distances.Add(distance);
+        }
       return distances.ToArray();
      }
     
-    /*private static Array MergeSort(Array A, int p, int r)
+    private static double[] MergeSort(double[] A, int p, int r)
     {
       if(p < r)
-            {
-                int q = (p + r) / 2;
-                MergeSort(A, p, q);
-                MergeSort(A, q + 1, r);
-                Merge(A, p, q, r);
-            }
-      return A;
-    }*/
-
-    /*private Array Merge(Array A, int p, int q, int r)
         {
-            //TODO
-        }*/
+            int q = (p + r) / 2;
+            MergeSort(A, p, q);
+            MergeSort(A, q + 1, r);
+            Merge(A, p, q, r);
+        }
+      return A;
+    }
+
+    private static double[] Merge(double[] A, int p, int q, int r)
+    {
+      //TODO
+
+      int LeftN = q - p + 1;    //calculate how long the arrays are going to be
+      int RightN = r - q;
+      
+      double[] L = new double[LeftN + 1];   //make arrays with the right lengths
+      double[] R = new double[RightN + 1];
+      
+      for(var i = 0; i < LeftN; i++)    //fill the arrays with the right numbers
+        {
+            Console.WriteLine("*R*: " + A[p + i]);
+            L[i] = A[p + i];
+        }
+      
+      Console.WriteLine("*R*: Fill L, leftn: " + LeftN + " L length: " + L.Length + " rightn: " + RightN + " R length: " + R.Length + " A length" + A.Length);
+
+      L[LeftN] = double.PositiveInfinity;
+
+      Console.WriteLine("*R*: L infinity");
+
+      for(var j = 0; j < RightN; j++)
+        {
+            R[j] = A[q + j];
+        }
+
+      Console.WriteLine("*R*: Fill R");
+
+      R[RightN] = double.PositiveInfinity;
+
+      return A;
+    }
+
+    //End methods excercise 1
 
     private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
       IEnumerable<Vector2> specialBuildings, 
