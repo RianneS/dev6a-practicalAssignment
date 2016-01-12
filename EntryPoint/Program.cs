@@ -41,15 +41,15 @@ namespace EntryPoint
 
     private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
     {
-      Console.WriteLine("*R*: " + house);
-      Console.WriteLine("*R*: " + specialBuildings);
+      //Console.WriteLine("*R*: " + house);
+      //Console.WriteLine("*R*: " + specialBuildings);
 
       double[] distances = CalculateEuclideanDistances(house, specialBuildings);
-      Console.WriteLine("*R*: ");
+      /*Console.WriteLine("*R*: ");
       foreach (var item in distances)
       {
         Console.WriteLine(item);
-      }
+      }*/
 
       MergeSort(distances, 0, distances.Length);
 
@@ -93,22 +93,17 @@ namespace EntryPoint
       
       for(var i = 0; i < LeftN; i++)    //fill the arrays with the right numbers
         {
-            Console.WriteLine("*R*: " + A[p + i]);
             L[i] = A[p + i];
         }
       
-      Console.WriteLine("*R*: Fill L, leftn: " + LeftN + " L length: " + L.Length + " rightn: " + RightN + " R length: " + R.Length + " A length" + A.Length);
+      //Console.WriteLine("*R*: leftn: " + LeftN + ", L length: " + L.Length + ", rightn: " + RightN + ", R length: " + R.Length + ", A length" + A.Length);
 
       L[LeftN] = double.PositiveInfinity;
-
-      Console.WriteLine("*R*: L infinity");
 
       for(var j = 0; j < RightN; j++)
         {
             R[j] = A[q + j];
         }
-
-      Console.WriteLine("*R*: Fill R");
 
       R[RightN] = double.PositiveInfinity;
 
