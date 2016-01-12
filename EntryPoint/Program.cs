@@ -39,6 +39,11 @@ namespace EntryPoint
       goto read_input;
     }
 
+    /*private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
+    {
+      return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
+    }*/
+
     private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
     {
       //Console.WriteLine("*R*: " + house);
@@ -51,9 +56,9 @@ namespace EntryPoint
         Console.WriteLine(item);
       }*/
 
-      MergeSort(distances, 0, distances.Length);
+      return MergeSort(distances, 0, distances.Length).ToList();
 
-      return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
+      //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }
 
     //Methods added by me for Excercise 1:
@@ -116,6 +121,10 @@ namespace EntryPoint
       IEnumerable<Vector2> specialBuildings, 
       IEnumerable<Tuple<Vector2, float>> housesAndDistances)
     {
+
+      Console.WriteLine("*R*: " + specialBuildings);
+      Console.WriteLine("*R*: " + housesAndDistances);
+
       return
           from h in housesAndDistances
           select
