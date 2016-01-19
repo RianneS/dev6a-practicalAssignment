@@ -44,19 +44,15 @@ namespace EntryPoint
       return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }*/
 
+    private static Vector2 currentHouse;       //Make house a global variable for later use
+
     private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
     {
+      currentHouse = house;
       Console.WriteLine("*R*: " + house);
       Console.WriteLine("*R*: " + specialBuildings);
 
-      //List<double> distances = CalculateEuclideanDistances(house, specialBuildings);
-      //Console.WriteLine("*R*: ");
-      //foreach (var item in distances)
-      //{
-      //  Console.WriteLine(item);
-      //}
-
-      Console.WriteLine("*R*" + specialBuildings.Count());
+      Console.WriteLine("*R*: " + specialBuildings.Count());
 
       return MergeSort(specialBuildings.ToList(), 0, specialBuildings.Count());
 
@@ -65,15 +61,10 @@ namespace EntryPoint
 
     //Methods added by me for Excercise 1:
 
-    private static List<double> CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
+    private static double CalculateEuclideanDistance(Vector2 specialBuilding)
     {
-      List<double> distances = new List<double>();
-      foreach (Vector2 building in buildings)
-        {
-            double distance = Math.Sqrt((Math.Pow((house.X - building.X), 2) + (Math.Pow((house.Y - building.Y), 2))));
-            distances.Add(distance);
-        }
-      return distances;
+      double distance = Math.Sqrt((Math.Pow((currentHouse.X - specialBuilding.X), 2) + (Math.Pow((currentHouse.Y - specialBuilding.Y), 2))));
+      return distance;
      }  //TODO make this return 1 distance?
     
     private static List<Vector2> MergeSort(List<Vector2> A, int p, int r)
@@ -106,6 +97,12 @@ namespace EntryPoint
       //Console.WriteLine("*R*: leftn: " + LeftN + ", L length: " + L.Length + ", rightn: " + RightN + ", R length: " + R.Length + ", A length" + A.Length);
 
       L[LeftN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+      
+      Console.WriteLine("*R*: contents of L");
+      foreach(var item in L)
+        {
+            Console.WriteLine(item);
+        }   //TODO delete test
 
       for(var j = 0; j < RightN; j++)
         {
@@ -114,9 +111,35 @@ namespace EntryPoint
 
       R[RightN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
+      Console.WriteLine("*R*: contents of R");
+      foreach(var item in R)
+        {
+            Console.WriteLine(item);
+        }   //TODO delete test
+
+      Console.WriteLine("*R*: ");
+
       //TODO sort the things
 
-      
+      int LCounter = 0;
+      int RCounter = 0;
+
+      for(var k = p; k <= r; k++)
+        {
+            Console.WriteLine(L[LCounter] + R[RCounter]);
+            double distanceL = CalculateEuclideanDistance(L[LCounter]);
+            double distanceR = CalculateEuclideanDistance(R[RCounter]);
+            if (distanceL <= distanceR)
+                {
+                    A[k] = L[LCounter];
+                    LCounter++;
+                }
+            else
+                {
+                    A[k] = R[RCounter];
+                    RCounter++;
+                }
+        }
 
       return A.ToList<Vector2>();
     }
