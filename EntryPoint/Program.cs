@@ -46,24 +46,26 @@ namespace EntryPoint
 
     private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
     {
-      //Console.WriteLine("*R*: " + house);
-      //Console.WriteLine("*R*: " + specialBuildings);
+      Console.WriteLine("*R*: " + house);
+      Console.WriteLine("*R*: " + specialBuildings);
 
-      double[] distances = CalculateEuclideanDistances(house, specialBuildings);
-      /*Console.WriteLine("*R*: ");
-      foreach (var item in distances)
-      {
-        Console.WriteLine(item);
-      }*/
+      //List<double> distances = CalculateEuclideanDistances(house, specialBuildings);
+      //Console.WriteLine("*R*: ");
+      //foreach (var item in distances)
+      //{
+      //  Console.WriteLine(item);
+      //}
 
-      return MergeSort(distances, 0, distances.Length).ToList();
+      Console.WriteLine("*R*" + specialBuildings.Count());
+
+      return MergeSort(specialBuildings.ToList(), 0, specialBuildings.Count());
 
       //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }
 
     //Methods added by me for Excercise 1:
 
-    private static double[] CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
+    private static List<double> CalculateEuclideanDistances(Vector2 house, IEnumerable<Vector2> buildings)
     {
       List<double> distances = new List<double>();
       foreach (Vector2 building in buildings)
@@ -71,10 +73,10 @@ namespace EntryPoint
             double distance = Math.Sqrt((Math.Pow((house.X - building.X), 2) + (Math.Pow((house.Y - building.Y), 2))));
             distances.Add(distance);
         }
-      return distances.ToArray();
-     }
+      return distances;
+     }  //TODO make this return 1 distance?
     
-    private static double[] MergeSort(double[] A, int p, int r)
+    private static List<Vector2> MergeSort(List<Vector2> A, int p, int r)
     {
       if(p < r)
         {
@@ -86,15 +88,15 @@ namespace EntryPoint
       return A;
     }
 
-    private static double[] Merge(double[] A, int p, int q, int r)
+    private static List<Vector2> Merge(List<Vector2> A, int p, int q, int r)
     {
       //TODO
 
       int LeftN = q - p + 1;    //calculate how long the arrays are going to be
       int RightN = r - q;
       
-      double[] L = new double[LeftN + 1];   //make arrays with the right lengths
-      double[] R = new double[RightN + 1];
+      Vector2[] L = new Vector2[LeftN + 1];   //make arrays with the right lengths
+      Vector2[] R = new Vector2[RightN + 1];
       
       for(var i = 0; i < LeftN; i++)    //fill the arrays with the right numbers
         {
@@ -103,16 +105,20 @@ namespace EntryPoint
       
       //Console.WriteLine("*R*: leftn: " + LeftN + ", L length: " + L.Length + ", rightn: " + RightN + ", R length: " + R.Length + ", A length" + A.Length);
 
-      L[LeftN] = double.PositiveInfinity;
+      L[LeftN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
       for(var j = 0; j < RightN; j++)
         {
             R[j] = A[q + j];
         }
 
-      R[RightN] = double.PositiveInfinity;
+      R[RightN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
-      return A;
+      //TODO sort the things
+
+      
+
+      return A.ToList<Vector2>();
     }
 
     //End methods excercise 1
