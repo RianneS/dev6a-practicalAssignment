@@ -52,8 +52,6 @@ namespace EntryPoint
       Console.WriteLine("*R*: " + house);
       Console.WriteLine("*R*: " + specialBuildings);
 
-      Console.WriteLine("*R*: " + specialBuildings.Count());
-
       return MergeSort(specialBuildings.ToList(), 0, (specialBuildings.Count() - 1));
 
       //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
@@ -65,14 +63,13 @@ namespace EntryPoint
     {
       double distance = Math.Sqrt((Math.Pow((currentHouse.X - specialBuilding.X), 2) + (Math.Pow((currentHouse.Y - specialBuilding.Y), 2))));
       return distance;
-     }  //TODO make this return 1 distance?
+     }
     
     private static List<Vector2> MergeSort(List<Vector2> A, int p, int r)
     {
       if(p < r)
         {
             int q = (p + r) / 2;
-            //Console.WriteLine("*R*: Mergesort, p: " + p + " r: " + r + " q: " + q);
             MergeSort(A, p, q);
             MergeSort(A, q + 1, r);
             Merge(A, p, q, r);
@@ -82,13 +79,6 @@ namespace EntryPoint
 
     private static List<Vector2> Merge(List<Vector2> A, int p, int q, int r)
     {
-      
-      Console.WriteLine("*R*: Merge, Contents of A:");
-        foreach (var item in A)
-        {
-            Console.WriteLine(item);
-        }   //TODO delete test
-
       int LeftN = q - p + 1;    //calculate how long the arrays are going to be
       int RightN = r - q;
       Vector2[] L = new Vector2[LeftN + 1];   //make arrays with the right lengths
@@ -99,15 +89,7 @@ namespace EntryPoint
             L[i] = A[p + i];
         }
       
-      //Console.WriteLine("*R*: leftn: " + LeftN + ", L length: " + L.Length + ", rightn: " + RightN + ", R length: " + R.Length + ", A length" + A.Length);
-
-      L[LeftN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
-      
-      Console.WriteLine("*R*: contents of L");
-      foreach(var item in L)
-        {
-            Console.WriteLine(item);
-        }   //TODO delete test
+      L[LeftN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);   //add a infinity to the end of the list for later use in comparing
 
       for(var j = 0; j < RightN; j++)
         {
@@ -117,20 +99,11 @@ namespace EntryPoint
 
       R[RightN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
-      Console.WriteLine("*R*: contents of R");
-      foreach(var item in R)
-        {
-            Console.WriteLine(item);
-        }   //TODO delete test
-
-      Console.WriteLine("*R*: counters");
-
       int LCounter = 0;
       int RCounter = 0;
 
       for(var k = p; k <= r; k++)
         {
-            Console.WriteLine(L[LCounter] + R[RCounter]);
             double distanceL = CalculateEuclideanDistance(L[LCounter]);
             double distanceR = CalculateEuclideanDistance(R[RCounter]);
             if (distanceL <= distanceR)
