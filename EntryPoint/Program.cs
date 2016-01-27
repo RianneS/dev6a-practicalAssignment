@@ -54,7 +54,7 @@ namespace EntryPoint
 
       Console.WriteLine("*R*: " + specialBuildings.Count());
 
-      return MergeSort(specialBuildings.ToList(), 0, specialBuildings.Count());
+      return MergeSort(specialBuildings.ToList(), 0, (specialBuildings.Count() - 1));
 
       //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
     }
@@ -71,7 +71,9 @@ namespace EntryPoint
     {
       if(p < r)
         {
+            
             int q = (p + r) / 2;
+            Console.WriteLine("*R*: Mergesort, p: " + p + " r: " + r + " q: " + q);
             MergeSort(A, p, q);
             MergeSort(A, q + 1, r);
             Merge(A, p, q, r);
@@ -81,11 +83,15 @@ namespace EntryPoint
 
     private static List<Vector2> Merge(List<Vector2> A, int p, int q, int r)
     {
-      //TODO
-
-      int LeftN = q - p + 1;    //calculate how long the arrays are going to be
-      int RightN = r - q;
       
+      Console.WriteLine("*R*: Merge, Contents of A:");
+        foreach (var item in A)
+        {
+            Console.WriteLine(item);
+        }   //TODO delete test
+
+            int LeftN = q - p + 1;    //calculate how long the arrays are going to be
+      int RightN = r - q;
       Vector2[] L = new Vector2[LeftN + 1];   //make arrays with the right lengths
       Vector2[] R = new Vector2[RightN + 1];
       
@@ -117,9 +123,7 @@ namespace EntryPoint
             Console.WriteLine(item);
         }   //TODO delete test
 
-      Console.WriteLine("*R*: ");
-
-      //TODO sort the things
+      Console.WriteLine("*R*: counters");
 
       int LCounter = 0;
       int RCounter = 0;
