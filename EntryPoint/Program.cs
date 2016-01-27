@@ -71,9 +71,8 @@ namespace EntryPoint
     {
       if(p < r)
         {
-            
             int q = (p + r) / 2;
-            Console.WriteLine("*R*: Mergesort, p: " + p + " r: " + r + " q: " + q);
+            //Console.WriteLine("*R*: Mergesort, p: " + p + " r: " + r + " q: " + q);
             MergeSort(A, p, q);
             MergeSort(A, q + 1, r);
             Merge(A, p, q, r);
@@ -90,7 +89,7 @@ namespace EntryPoint
             Console.WriteLine(item);
         }   //TODO delete test
 
-            int LeftN = q - p + 1;    //calculate how long the arrays are going to be
+      int LeftN = q - p + 1;    //calculate how long the arrays are going to be
       int RightN = r - q;
       Vector2[] L = new Vector2[LeftN + 1];   //make arrays with the right lengths
       Vector2[] R = new Vector2[RightN + 1];
@@ -112,7 +111,8 @@ namespace EntryPoint
 
       for(var j = 0; j < RightN; j++)
         {
-            R[j] = A[q + j];
+            Console.WriteLine("*R*: " + A[j] + " 2: " + A[q + j]);
+            R[j] = A[q + j + 1];
         }
 
       R[RightN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
