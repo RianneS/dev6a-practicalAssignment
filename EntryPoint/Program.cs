@@ -128,9 +128,11 @@ namespace EntryPoint
       IEnumerable<Tuple<Vector2, float>> housesAndDistances)
     {
 
-      Console.WriteLine("*R*: " + specialBuildings);
-      Console.WriteLine("*R*: " + housesAndDistances);
+      Console.WriteLine("*R*: " + specialBuildings + " Length: " + specialBuildings.Count());
+      Console.WriteLine("*R*: " + housesAndDistances + " Length: " + housesAndDistances.Count());
 
+      CreateKdTree(specialBuildings.ToList());
+      
       return
           from h in housesAndDistances
           select
@@ -138,6 +140,19 @@ namespace EntryPoint
             where Vector2.Distance(h.Item1, s) <= h.Item2
             select s;
     }
+
+    //Methods added by me for exercise 2
+
+    private static List<Vector2> CreateKdTree(List<Vector2> specialBuildings)
+    {
+      List<Vector2> Tree = new List<Vector2> { };
+      foreach (var specialBuilding in specialBuildings){
+            Tree.Add(specialBuilding);
+      }
+      return Tree;
+    }
+    
+    //End methods excercise 2
 
     private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding, 
       Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
