@@ -148,8 +148,15 @@ namespace EntryPoint
       List<Vector2> Tree = new List<Vector2> { };
       foreach (var specialBuilding in specialBuildings){
             Tree.Add(specialBuilding);
+            Node newNode = new Node(specialBuilding);
+                InsertNode(newNode);
       }
       return Tree;
+    }
+
+    private static Node InsertNode(Node newNode)
+    {
+        return newNode;
     }
     
     //End methods excercise 2
