@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-//test comment!
+//Solution by Rianne
 
 namespace EntryPoint
 {
@@ -125,7 +125,6 @@ namespace EntryPoint
 
     //Make a root global variable that will store the root of my tree, for later use
     private static Node Root;
-    //private static List<List<Vector2>> HousesInRangeGlobal;
 
     private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
       IEnumerable<Vector2> specialBuildings, 
@@ -137,9 +136,7 @@ namespace EntryPoint
 
       CreateKdTree(specialBuildings.ToList());
       return TraverseTree(housesAndDistances.ToList());
-      
-      //return HousesInRangeGlobal;
-      
+
       //return
       //    from h in housesAndDistances
       //    select
@@ -152,22 +149,13 @@ namespace EntryPoint
 
     private static void CreateKdTree(List<Vector2> specialBuildings)
     {
-      List<Vector2> specialBuildingsTest = new List<Vector2>(){};
-      specialBuildingsTest.Add(specialBuildings[19]);
-      specialBuildingsTest.Add(specialBuildings[2]);
-      specialBuildingsTest.Add(specialBuildings[35]);
-      specialBuildingsTest.Add(specialBuildings[37]);
-      specialBuildingsTest.Add(specialBuildings[1]);
-
       Console.WriteLine("*R* specialBuildings[0], 1: " + specialBuildings[0] + " Y: " + specialBuildings[0].Y);
       
-      //This loop creates a node and then adds it to the tree
+      //This loop creates a  (one for every specialBuilding) and then adds it to the tree
       foreach (var specialBuilding in specialBuildings){
             Node newNode = new Node(specialBuilding);
             InsertNode(newNode, Root, "X");  
       }
-
-      Console.WriteLine("*R* Root coordinates: " + Root.getCoordinates() + " LeftChild: " + Root.getLeftChild() + " Right: " + Root.getRightChild());
     }
 
     private static Node InsertNode(Node newNode, Node currentRoot, string comparingOn)
@@ -175,46 +163,36 @@ namespace EntryPoint
         Console.WriteLine("*R* new coords: " + newNode.getCoordinates());
         if (Root == null)
         {
-            Console.WriteLine("Root is null");
-            Root = newNode;
+            Root = newNode;     //If Root is empty, this method gives the Root the value of the new node (so this only happens the first time)
             return Root;
         }
-        Console.WriteLine("*R*: currentRoot " + currentRoot.getCoordinates() + " C: " + comparingOn);
-        if (comparingOn == "Y")
+        if (comparingOn == "Y")        //This method compares alternately on X and then on Y, this is the part that happens when it's comparing on Y
         {
-            Console.WriteLine("*R*: Y");
-            if (newNode.getY() < currentRoot.getY())
+            if (newNode.getY() < currentRoot.getY())    //This checks if the new node is smaller than the current one
             {
-                Console.WriteLine("*R*: smaller");
-                if (currentRoot.getLeftChild() == null)
+                if (currentRoot.getLeftChild() == null)     //If it is, if checks if the left child of the current node is null
                 {
-                    Console.WriteLine("*R*: add");
-                    currentRoot.setLeftChild(newNode);
+                    currentRoot.setLeftChild(newNode);      //If it isn't, it adds the new node to that spot, and returns it
                     return currentRoot;
                 }
-                InsertNode(newNode, currentRoot.getLeftChild(), "X");
+                InsertNode(newNode, currentRoot.getLeftChild(), "X");   //If the spot isn't empty, it calls the method again, with the next node down, and now comparing on X
             }
-            else if (newNode.getY() >= currentRoot.getY())
+            else if (newNode.getY() >= currentRoot.getY())      //This checks if the new node is bigger than the current one
             {
-                Console.WriteLine("*R*: bigger");
                 if (currentRoot.getRightChild() == null)
                 {
-                    Console.WriteLine("*R*: add");
                     currentRoot.setRightChild(newNode);
                     return currentRoot;
                 }
                 InsertNode(newNode, currentRoot.getRightChild(), "X");
             }
         }
-        if (comparingOn == "X")
-        {
-            Console.WriteLine("*R*: X");
+        if (comparingOn == "X")         //This is the part that happens when it's comparing on X, it's almost identical to the part that happens for Y
+            {
             if (newNode.getX() < currentRoot.getX())
             {
-                Console.WriteLine("*R*: smaller");
                 if (currentRoot.getLeftChild() == null)
                 {
-                    Console.WriteLine("*R*: add");
                     currentRoot.setLeftChild(newNode);
                     return currentRoot;
                 }
@@ -222,17 +200,14 @@ namespace EntryPoint
             }
             else if (newNode.getX() >= currentRoot.getX())
             {
-                Console.WriteLine("*R*: bigger");
                 if (currentRoot.getRightChild() == null)
                 {
-                    Console.WriteLine("*R*: add");
                     currentRoot.setRightChild(newNode);
                     return currentRoot;
                 }
                 InsertNode(newNode, currentRoot.getRightChild(), "Y");
             }
         }
-        Console.WriteLine("*R*: Why is it here?");
         return Root;
     }
 
@@ -240,6 +215,8 @@ namespace EntryPoint
     {
         List<Vector2> HousesInRange = new List<Vector2> { };
         List<List<Vector2>> HousesInRangeLists = new List<List<Vector2>> { };
+
+        //This loop creates a list of buildings that are in range for every house
         foreach (Tuple<Vector2,float> house in houses)
         {
                 HousesInRangeLists.Add(Traverse(house, Root, HousesInRange));
@@ -251,7 +228,6 @@ namespace EntryPoint
     {
         if (IsInRange(currentNode.getCoordinates(), house.Item1, house.Item2))
             {
-                Console.WriteLine("*R* Traverse add to list: " + currentNode.getCoordinates());
                 HousesInRange.Add(currentNode.getCoordinates());
             }
         if (currentNode.getLeftChild() != null)
@@ -265,6 +241,7 @@ namespace EntryPoint
         return HousesInRange;
     }
 
+    //This method checks if the given specialbuilding is in the range of the given house
     private static bool IsInRange(Vector2 specialBuilding, Vector2 house, float distance)
     {
         if ((Math.Sqrt((Math.Pow((house.X - specialBuilding.X), 2) + (Math.Pow((house.Y - specialBuilding.Y), 2))))) < distance)
