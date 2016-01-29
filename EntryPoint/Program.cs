@@ -125,6 +125,7 @@ namespace EntryPoint
 
     //Make a root global variable that will store the root of my tree, for later use
     private static Node Root;
+    private static List<Vector2> HousesInRange;
 
     private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
       IEnumerable<Vector2> specialBuildings, 
@@ -157,7 +158,8 @@ namespace EntryPoint
       specialBuildingsTest.Add(specialBuildings[1]);
 
       Console.WriteLine("*R* specialBuildings[0], 1: " + specialBuildings[0] + " Y: " + specialBuildings[0].Y);
-
+      
+      //This loop creates a node and then adds it to the tree
       foreach (var specialBuilding in specialBuildings){
             Node newNode = new Node(specialBuilding);
             InsertNode(newNode, Root, "X");  
@@ -232,12 +234,52 @@ namespace EntryPoint
         return Root;
     }
 
-    private static List<Vector2> TraverseTree(List<Tuple<Vector2, float>> houses)
+    private static void TraverseTree(List<Tuple<Vector2, float>> houses)
     {
-        List<Vector2> test = new List<Vector2> { };
-        return test;
+        foreach (Tuple<Vector2,float> house in houses)
+        {
+            //while (currentNode != null){
+                //IsInRange(nextNode.getCoordinates(), house.Item1, house.Item2);
+                //if (IsInRange(currentNode.getCoordinates(), house.Item1, house.Item2))
+                //{
+                //    housesInRange.Add(currentNode.getCoordinates());
+                //    prevNode = currentNode;
+                //}
+            //}
+            Traverse(house, Root);
+        }
+        
+        //TODO Go through all nodes
     }
-    
+
+    private static void Traverse(Tuple<Vector2, float> house, Node currentNode)
+    {
+        if (IsInRange(currentNode.getCoordinates(), house.Item1, house.Item2))
+            {
+                Console.WriteLine("*R* Traverse add to list: " + currentNode.getCoordinates());
+                HousesInRange.Add(currentNode.getCoordinates());
+            }
+        if (currentNode.getLeftChild() != null)
+        {
+            Traverse(house, currentNode.getLeftChild());
+        }
+        if (currentNode.getRightChild() != null)
+        {
+            Traverse(house, currentNode.getRightChild());
+        }
+    }
+
+    private static bool IsInRange(Vector2 specialBuilding, Vector2 house, float distance)
+    {
+        if ((Math.Sqrt((Math.Pow((house.X - specialBuilding.X), 2) + (Math.Pow((house.Y - specialBuilding.Y), 2))))) < distance)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+     }
+
     //End methods excercise 2
 
     private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding, 
