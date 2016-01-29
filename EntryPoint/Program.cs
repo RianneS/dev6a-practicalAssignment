@@ -156,10 +156,8 @@ namespace EntryPoint
       specialBuildingsTest.Add(specialBuildings[37]);
       specialBuildingsTest.Add(specialBuildings[1]);
 
-      List<Vector2> Tree = new List<Vector2> { };
       Console.WriteLine("*R* specialBuildings[0], 1: " + specialBuildings[0] + " Y: " + specialBuildings[0].Y);
-      foreach (var specialBuilding in specialBuildingsTest){
-            Tree.Add(specialBuilding);
+      foreach (var specialBuilding in specialBuildings){
             Node newNode = new Node(specialBuilding);
             InsertNode(newNode, Root, "X");  
       }
@@ -169,14 +167,10 @@ namespace EntryPoint
     private static Node InsertNode(Node newNode, Node currentRoot, string comparingOn)
     {
         Console.WriteLine("*R* new coords: " + newNode.getCoordinates());
-        if (currentRoot == null)
+        if (Root == null)
         {
             Console.WriteLine("Root is null");
-            if (Root == null)
-            {
-                Root = newNode;
-            }
-            currentRoot = newNode;
+            Root = newNode;
             return Root;
         }
         if (comparingOn == "Y")
@@ -184,23 +178,51 @@ namespace EntryPoint
             Console.WriteLine("*R*: Y");
             if (newNode.getY() < currentRoot.getY())
             {
+                Console.WriteLine("*R*: smaller");
+                if (currentRoot.getLeftChild() == null)
+                {
+                    Console.WriteLine("*R*: add");
+                    currentRoot.setLeftChild(newNode);
+                    return currentRoot;
+                }
                 InsertNode(newNode, currentRoot.getLeftChild(), "X");
             }
             else if (newNode.getY() > currentRoot.getY())
             {
+                Console.WriteLine("*R*: bigger");
+                if (currentRoot.getRightChild() == null)
+                {
+                    Console.WriteLine("*R*: add");
+                    currentRoot.setRightChild(newNode);
+                    return currentRoot;
+                }
                 InsertNode(newNode, currentRoot.getRightChild(), "X");
             }
         }
         else if (comparingOn == "X")
         {
             Console.WriteLine("*R*: X");
-            if (newNode.getX() > currentRoot.getX())
+            if (newNode.getX() < currentRoot.getX())
             {
-                InsertNode(newNode, currentRoot.getRightChild(), "Y");
+                Console.WriteLine("*R*: smaller");
+                if (currentRoot.getLeftChild() == null)
+                {
+                    Console.WriteLine("*R*: add");
+                    currentRoot.setLeftChild(newNode);
+                    return currentRoot;
+                }
+                InsertNode(newNode, currentRoot.getLeftChild(), "Y");
             }
             else if (newNode.getX() > currentRoot.getX())
             {
-                InsertNode(newNode, currentRoot.getLeftChild(), "Y");
+                Console.WriteLine("*R*: bigger");
+                if (currentRoot.getRightChild() == null)
+                {
+                    Console.WriteLine("*R*: add");
+                    currentRoot.setRightChild(newNode);
+                    return currentRoot;
+                }
+                InsertNode(newNode, currentRoot.getRightChild(), "Y");
             }
         }
         return Root;
