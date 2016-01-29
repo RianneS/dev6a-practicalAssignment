@@ -135,7 +135,7 @@ namespace EntryPoint
       Console.WriteLine("*R*: " + housesAndDistances + " Length: " + housesAndDistances.Count() + " 1: " + housesAndDistances.ToList()[0].Item2);
 
       CreateKdTree(specialBuildings.ToList());
-      
+      TraverseTree(housesAndDistances.ToList());
 
       return
           from h in housesAndDistances
@@ -157,10 +157,12 @@ namespace EntryPoint
       specialBuildingsTest.Add(specialBuildings[1]);
 
       Console.WriteLine("*R* specialBuildings[0], 1: " + specialBuildings[0] + " Y: " + specialBuildings[0].Y);
+
       foreach (var specialBuilding in specialBuildings){
             Node newNode = new Node(specialBuilding);
             InsertNode(newNode, Root, "X");  
       }
+
       Console.WriteLine("*R* Root coordinates: " + Root.getCoordinates() + " LeftChild: " + Root.getLeftChild() + " Right: " + Root.getRightChild());
     }
 
@@ -173,6 +175,7 @@ namespace EntryPoint
             Root = newNode;
             return Root;
         }
+        Console.WriteLine("*R*: currentRoot " + currentRoot.getCoordinates() + " C: " + comparingOn);
         if (comparingOn == "Y")
         {
             Console.WriteLine("*R*: Y");
@@ -187,7 +190,7 @@ namespace EntryPoint
                 }
                 InsertNode(newNode, currentRoot.getLeftChild(), "X");
             }
-            else if (newNode.getY() > currentRoot.getY())
+            else if (newNode.getY() >= currentRoot.getY())
             {
                 Console.WriteLine("*R*: bigger");
                 if (currentRoot.getRightChild() == null)
@@ -199,7 +202,7 @@ namespace EntryPoint
                 InsertNode(newNode, currentRoot.getRightChild(), "X");
             }
         }
-        else if (comparingOn == "X")
+        if (comparingOn == "X")
         {
             Console.WriteLine("*R*: X");
             if (newNode.getX() < currentRoot.getX())
@@ -213,7 +216,7 @@ namespace EntryPoint
                 }
                 InsertNode(newNode, currentRoot.getLeftChild(), "Y");
             }
-            else if (newNode.getX() > currentRoot.getX())
+            else if (newNode.getX() >= currentRoot.getX())
             {
                 Console.WriteLine("*R*: bigger");
                 if (currentRoot.getRightChild() == null)
@@ -225,7 +228,14 @@ namespace EntryPoint
                 InsertNode(newNode, currentRoot.getRightChild(), "Y");
             }
         }
+        Console.WriteLine("*R*: Why is it here?");
         return Root;
+    }
+
+    private static List<Vector2> TraverseTree(List<Tuple<Vector2, float>> houses)
+    {
+        List<Vector2> test = new List<Vector2> { };
+        return test;
     }
     
     //End methods excercise 2
