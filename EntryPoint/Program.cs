@@ -123,16 +123,20 @@ namespace EntryPoint
 
     //End methods excercise 1
 
+    //Make a root global variable that will store the root of my tree, for later use
+    private static Node Root;
+
     private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
       IEnumerable<Vector2> specialBuildings, 
       IEnumerable<Tuple<Vector2, float>> housesAndDistances)
     {
 
       Console.WriteLine("*R*: " + specialBuildings + " Length: " + specialBuildings.Count());
-      Console.WriteLine("*R*: " + housesAndDistances + " Length: " + housesAndDistances.Count());
+      Console.WriteLine("*R*: " + housesAndDistances + " Length: " + housesAndDistances.Count() + " 1: " + housesAndDistances.ToList()[0].Item2);
 
       CreateKdTree(specialBuildings.ToList());
       
+
       return
           from h in housesAndDistances
           select
@@ -143,15 +147,24 @@ namespace EntryPoint
 
     //Methods added by me for exercise 2
 
-    private static List<Vector2> CreateKdTree(List<Vector2> specialBuildings)
+    private static void CreateKdTree(List<Vector2> specialBuildings)
     {
+      bool createdRoot = false;
       List<Vector2> Tree = new List<Vector2> { };
+      Console.WriteLine("*R* specialBuildings[0], 1: " + specialBuildings[0] + " Y: " + specialBuildings[0].Y);
       foreach (var specialBuilding in specialBuildings){
             Tree.Add(specialBuilding);
             Node newNode = new Node(specialBuilding);
+            if (createdRoot == false)
+            {
+                Root = newNode;
+                createdRoot = true;
+            } else
+            {
                 InsertNode(newNode);
+            }   
       }
-      return Tree;
+      Console.WriteLine("*R* Root coordinates: " + Root.getCoordinates() + " LeftChild: " + Root.getLeftChild() + " Right: " + Root.getRightChild());
     }
 
     private static Node InsertNode(Node newNode)
