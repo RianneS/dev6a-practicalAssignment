@@ -125,7 +125,7 @@ namespace EntryPoint
 
     //Make a root global variable that will store the root of my tree, for later use
     private static Node Root;
-    private static List<Vector2> HousesInRange;
+    //private static List<List<Vector2>> HousesInRangeGlobal;
 
     private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
       IEnumerable<Vector2> specialBuildings, 
@@ -136,14 +136,16 @@ namespace EntryPoint
       Console.WriteLine("*R*: " + housesAndDistances + " Length: " + housesAndDistances.Count() + " 1: " + housesAndDistances.ToList()[0].Item2);
 
       CreateKdTree(specialBuildings.ToList());
-      TraverseTree(housesAndDistances.ToList());
-
-      return
-          from h in housesAndDistances
-          select
-            from s in specialBuildings
-            where Vector2.Distance(h.Item1, s) <= h.Item2
-            select s;
+      return TraverseTree(housesAndDistances.ToList());
+      
+      //return HousesInRangeGlobal;
+      
+      //return
+      //    from h in housesAndDistances
+      //    select
+      //      from s in specialBuildings
+      //      where Vector2.Distance(h.Item1, s) <= h.Item2
+      //      select s;
     }
 
     //Methods added by me for exercise 2
@@ -234,25 +236,18 @@ namespace EntryPoint
         return Root;
     }
 
-    private static void TraverseTree(List<Tuple<Vector2, float>> houses)
+    private static List<List<Vector2>> TraverseTree(List<Tuple<Vector2, float>> houses)
     {
+        List<Vector2> HousesInRange = new List<Vector2> { };
+        List<List<Vector2>> HousesInRangeLists = new List<List<Vector2>> { };
         foreach (Tuple<Vector2,float> house in houses)
         {
-            //while (currentNode != null){
-                //IsInRange(nextNode.getCoordinates(), house.Item1, house.Item2);
-                //if (IsInRange(currentNode.getCoordinates(), house.Item1, house.Item2))
-                //{
-                //    housesInRange.Add(currentNode.getCoordinates());
-                //    prevNode = currentNode;
-                //}
-            //}
-            Traverse(house, Root);
+                HousesInRangeLists.Add(Traverse(house, Root, HousesInRange));
         }
-        
-        //TODO Go through all nodes
+        return HousesInRangeLists;
     }
 
-    private static void Traverse(Tuple<Vector2, float> house, Node currentNode)
+    private static List<Vector2> Traverse(Tuple<Vector2, float> house, Node currentNode, List<Vector2> HousesInRange)
     {
         if (IsInRange(currentNode.getCoordinates(), house.Item1, house.Item2))
             {
@@ -261,12 +256,13 @@ namespace EntryPoint
             }
         if (currentNode.getLeftChild() != null)
         {
-            Traverse(house, currentNode.getLeftChild());
+            Traverse(house, currentNode.getLeftChild(), HousesInRange);
         }
         if (currentNode.getRightChild() != null)
         {
-            Traverse(house, currentNode.getRightChild());
+            Traverse(house, currentNode.getRightChild(), HousesInRange);
         }
+        return HousesInRange;
     }
 
     private static bool IsInRange(Vector2 specialBuilding, Vector2 house, float distance)
