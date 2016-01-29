@@ -149,27 +149,61 @@ namespace EntryPoint
 
     private static void CreateKdTree(List<Vector2> specialBuildings)
     {
-      bool createdRoot = false;
+      List<Vector2> specialBuildingsTest = new List<Vector2>(){};
+      specialBuildingsTest.Add(specialBuildings[19]);
+      specialBuildingsTest.Add(specialBuildings[2]);
+      specialBuildingsTest.Add(specialBuildings[35]);
+      specialBuildingsTest.Add(specialBuildings[37]);
+      specialBuildingsTest.Add(specialBuildings[1]);
+
       List<Vector2> Tree = new List<Vector2> { };
       Console.WriteLine("*R* specialBuildings[0], 1: " + specialBuildings[0] + " Y: " + specialBuildings[0].Y);
-      foreach (var specialBuilding in specialBuildings){
+      foreach (var specialBuilding in specialBuildingsTest){
             Tree.Add(specialBuilding);
             Node newNode = new Node(specialBuilding);
-            if (createdRoot == false)
-            {
-                Root = newNode;
-                createdRoot = true;
-            } else
-            {
-                InsertNode(newNode);
-            }   
+            InsertNode(newNode, Root, "X");  
       }
       Console.WriteLine("*R* Root coordinates: " + Root.getCoordinates() + " LeftChild: " + Root.getLeftChild() + " Right: " + Root.getRightChild());
     }
 
-    private static Node InsertNode(Node newNode)
+    private static Node InsertNode(Node newNode, Node currentRoot, string comparingOn)
     {
-        return newNode;
+        Console.WriteLine("*R* new coords: " + newNode.getCoordinates());
+        if (currentRoot == null)
+        {
+            Console.WriteLine("Root is null");
+            if (Root == null)
+            {
+                Root = newNode;
+            }
+            currentRoot = newNode;
+            return Root;
+        }
+        if (comparingOn == "Y")
+        {
+            Console.WriteLine("*R*: Y");
+            if (newNode.getY() < currentRoot.getY())
+            {
+                InsertNode(newNode, currentRoot.getLeftChild(), "X");
+            }
+            else if (newNode.getY() > currentRoot.getY())
+            {
+                InsertNode(newNode, currentRoot.getRightChild(), "X");
+            }
+        }
+        else if (comparingOn == "X")
+        {
+            Console.WriteLine("*R*: X");
+            if (newNode.getX() > currentRoot.getX())
+            {
+                InsertNode(newNode, currentRoot.getRightChild(), "Y");
+            }
+            else if (newNode.getX() > currentRoot.getX())
+            {
+                InsertNode(newNode, currentRoot.getLeftChild(), "Y");
+            }
+        }
+        return Root;
     }
     
     //End methods excercise 2

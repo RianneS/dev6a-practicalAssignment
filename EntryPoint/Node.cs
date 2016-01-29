@@ -19,6 +19,18 @@ public class Node
         return Coordinates;
     }
 
+    public float getY()
+    {
+        float Y = Coordinates.Y;
+        return Y;
+    }
+
+    public float getX()
+    {
+        float X = Coordinates.X;
+        return X;
+    }
+
     public void setLeftChild(Node Child)
     {
         LeftChild = Child;
