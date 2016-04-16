@@ -52,12 +52,6 @@ namespace EntryPoint
       Console.WriteLine("*R*: " + house);
       Console.WriteLine("*R*: " + specialBuildings);
 
-      Console.WriteLine("*R*: Contents of A: ");
-        foreach (Vector2 thing in specialBuildings.ToList())
-        {
-            Console.WriteLine(thing);
-        }
-
       return MergeSort(specialBuildings.ToList(), 0, (specialBuildings.Count() - 1));
 
       //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
@@ -78,142 +72,54 @@ namespace EntryPoint
             int q = (p + r) / 2;
             MergeSort(A, p, q);
             MergeSort(A, q + 1, r);
-            Merge2(A, p, q, r);
+            Merge(A, p, q, r);
         }
       return A;
     }
 
-    public static List<Vector2> Merge(List<Vector2> A, int p, int q, int r)
+    private static List<Vector2> Merge(List<Vector2> A, int p, int q, int r)
     {
-            int LeftN = q;              //set lengths
-            int RightN = r - q;
-
-            Console.WriteLine("*R*: LeftN, RightN: " + LeftN + ", " + RightN);
-
-            Vector2[] L = new Vector2[LeftN + 1];       //make arrays with right lengths
-            Vector2[] R = new Vector2[RightN + 1];
-
-            for (int i = 0; i < LeftN; i++)             //fill array
-            {
-                L[i] = A[i + 1];
-            }
-
-            L[LeftN].X = float.PositiveInfinity;        //make the last index of left/right array inifnity
-            L[LeftN].Y = float.PositiveInfinity;
-
-            for (int j = 0; j < RightN; j++)
-            {
-                R[j] = A[j];
-            }
-
-            R[RightN].X = float.PositiveInfinity;
-            R[RightN].Y = float.PositiveInfinity;
-
-            Console.WriteLine("*R*: Contents of R: ");
-            foreach (Vector2 thing in R)
-            {
-                Console.Write(thing);
-            }
-            Console.WriteLine("");
-
-            Console.WriteLine("*R*: Contents of L: ");
-            foreach (Vector2 thing in L)
-            {
-                Console.Write(thing);
-            }
-            Console.WriteLine("");
-
-            int RightCount = 0;
-            int LeftCount = 0;
-
-            for (int n = 0; n < LeftN + RightN - 2; n++) {      //does this as many times as the lengths of L and R together
-                Console.WriteLine("*R*: RightCount, LeftCount: " + RightCount + ", " + LeftCount);
-                Console.WriteLine("*R*: left: " + CalculateEuclideanDistance(L[LeftCount]) + ", right: " + CalculateEuclideanDistance(R[RightCount]));
-                if (CalculateEuclideanDistance(L[LeftCount]) < CalculateEuclideanDistance(R[RightCount]))   //Checks distance
-                {
-                    A[n] = L[LeftCount];          //adds the smallest one
-                    LeftCount++;
-                    Console.WriteLine("*R*: Add Left");
-                }
-                else if (CalculateEuclideanDistance(L[LeftCount]) >= CalculateEuclideanDistance(R[RightCount]))
-                {
-                    A[n] = R[RightCount];
-                    RightCount++;
-                    Console.WriteLine("*R*: Add Right");
-                }
-            }
-
-            return A;
-    }
-
-    public static List<Vector2> Merge2(List<Vector2> A, int p, int q, int r)
-    {
-            Console.WriteLine("*R*: p: " + p + " q: " + q + " r: " + r);
-            int LeftN = q;
-            int RightN = r - q;
-
-            Vector2[] L = new Vector2[LeftN + 1];       //make arrays with right lengths
-            Vector2[] R = new Vector2[RightN + 1];
-
-            for (int i = 0; i < LeftN; i++)
-            {
-                L[i] = A[i];
-            }
-
-            for (int j = 0; j < RightN; j++)
-            {
-                R[j] = A[j + q];
-            }
-
-            L[LeftN].X = float.PositiveInfinity;        //make the last index of left/right array inifnity
-            L[LeftN].Y = float.PositiveInfinity;
-            R[RightN].X = float.PositiveInfinity;
-            R[RightN].Y = float.PositiveInfinity;
-
-            int LeftCount = 0;
-            int RightCount = 0;
-
-            for (int m = 0; m < LeftN + RightN - 2; m++ )
-            {
-                Console.Write(LeftCount + " " + RightCount + "; ");
-                Console.WriteLine(CalculateEuclideanDistance(L[LeftCount]) + ", " + CalculateEuclideanDistance(R[RightCount]));
-                if (CalculateEuclideanDistance(L[LeftCount]) < CalculateEuclideanDistance(R[RightCount]))
-                {
-                    Console.WriteLine("left");
-                    A[m] = L[LeftCount];
-                    LeftCount += 1;
-                }
-                else if (CalculateEuclideanDistance(L[LeftCount]) >= CalculateEuclideanDistance(R[RightCount]))
-                {
-                    Console.WriteLine("right");
-                    A[m] = R[RightCount];
-                    RightCount += 1;
-                }
-            }
-            Console.WriteLine("");
-
-            Console.WriteLine("Contents of R:");
-            foreach (var thing in R)
-            {
-                Console.Write(thing);
-            }
-            Console.WriteLine("");
-
-            Console.WriteLine("Contents of L:");
-            foreach (var thing in L)
-            {
-                Console.Write(thing);
-            }
-            Console.WriteLine("");
-
-            Console.WriteLine("Contents of A:");
-            foreach (var thing in A)
-            {
-                Console.Write(thing);
-            }
-
-            return A;
+      int LeftN = q - p + 1;    //calculate how long the arrays are going to be
+      int RightN = r - q;
+      Vector2[] L = new Vector2[LeftN + 1];   //make arrays with the right lengths
+      Vector2[] R = new Vector2[RightN + 1];
+      
+      for(var i = 0; i < LeftN; i++)    //fill the arrays with the right numbers
+        {
+            L[i] = A[p + i];
         }
+      
+      L[LeftN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);   //add a infinity to the end of the list for later use in comparing
+
+      for(var j = 0; j < RightN; j++)
+        {
+            Console.WriteLine("*R*: " + A[j] + " 2: " + A[q + j]);
+            R[j] = A[q + j + 1];
+        }
+
+      R[RightN] = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+
+      int LCounter = 0;
+      int RCounter = 0;
+
+      for(var k = p; k <= r; k++)
+        {
+            double distanceL = CalculateEuclideanDistance(L[LCounter]);
+            double distanceR = CalculateEuclideanDistance(R[RCounter]);
+            if (distanceL <= distanceR)
+                {
+                    A[k] = L[LCounter];
+                    LCounter++;
+                }
+            else
+                {
+                    A[k] = R[RCounter];
+                    RCounter++;
+                }
+        }
+
+      return A.ToList<Vector2>();
+    }
 
     //End methods excercise 1
 
@@ -252,60 +158,57 @@ namespace EntryPoint
       }
     }
 
-        private static Node InsertNode(Node newNode, Node currentRoot, string comparingOn)
+    private static Node InsertNode(Node newNode, Node currentRoot, string comparingOn)
+    {
+        Console.WriteLine("*R* new coords: " + newNode.getCoordinates());
+        if (Root == null)
         {
-            if (Root == null)
+            Root = newNode;     //If Root is empty, this method gives the Root the value of the new node (so this only happens the first time)
+            return Root;
+        }
+        if (comparingOn == "Y")        //This method compares alternately on X and then on Y, this is the part that happens when it's comparing on Y
+        {
+            if (newNode.getY() < currentRoot.getY())    //This checks if the new node is smaller than the current one
             {
-                Root = newNode;
-                return Root;
+                if (currentRoot.getLeftChild() == null)     //If it is, if checks if the left child of the current node is null
+                {
+                    currentRoot.setLeftChild(newNode);      //If it isn't, it adds the new node to that spot, and returns it
+                    return currentRoot;
+                }
+                InsertNode(newNode, currentRoot.getLeftChild(), "X");   //If the spot isn't empty, it calls the method again, with the next node down, and now comparing on X
             }
-            if (comparingOn == "Y")
+            else if (newNode.getY() >= currentRoot.getY())      //This checks if the new node is bigger than the current one
             {
-                if (newNode.getY() < currentRoot.getY())
+                if (currentRoot.getRightChild() == null)
                 {
-                    if (currentRoot.getLeftChild() == null)
-                    {
-                        currentRoot.setLeftChild(newNode);
-                        Console.WriteLine("*R*: Added");
-                        return newNode;
-                    }
-                    InsertNode(newNode, currentRoot.getLeftChild(), "X");
+                    currentRoot.setRightChild(newNode);
+                    return currentRoot;
                 }
-                if (newNode.getY() >= currentRoot.getY())
-                {
-                    if (currentRoot.getRightChild() == null)
-                    {
-                        currentRoot.setRightChild(newNode);
-                        Console.WriteLine("*R*: Added");
-                        return newNode;
-                    }
-                    InsertNode(newNode, currentRoot.getRightChild(), "X");
-                }
+                InsertNode(newNode, currentRoot.getRightChild(), "X");
             }
-            if (comparingOn == "X")
+        }
+        if (comparingOn == "X")         //This is the part that happens when it's comparing on X, it's almost identical to the part that happens for Y
             {
-                if (newNode.getX() < currentRoot.getX())
+            if (newNode.getX() < currentRoot.getX())
+            {
+                if (currentRoot.getLeftChild() == null)
                 {
-                    if (currentRoot.getLeftChild() == null)
-                    {
-                        currentRoot.setLeftChild(newNode);
-                        Console.WriteLine("*R*: Added");
-                        return newNode;
-                    }
-                    InsertNode(newNode, currentRoot.getLeftChild(), "Y");
+                    currentRoot.setLeftChild(newNode);
+                    return currentRoot;
                 }
-                if (newNode.getX() >= currentRoot.getX())
-                {
-                    if (currentRoot.getRightChild() == null)
-                    {
-                        currentRoot.setRightChild(newNode);
-                        Console.WriteLine("*R*: Added");
-                        return newNode;
-                    }
-                    InsertNode(newNode, currentRoot.getRightChild(), "Y");
-                }
+                InsertNode(newNode, currentRoot.getLeftChild(), "Y");
             }
-            return newNode;
+            else if (newNode.getX() >= currentRoot.getX())
+            {
+                if (currentRoot.getRightChild() == null)
+                {
+                    currentRoot.setRightChild(newNode);
+                    return currentRoot;
+                }
+                InsertNode(newNode, currentRoot.getRightChild(), "Y");
+            }
+        }
+        return Root;
     }
 
     private static List<List<Vector2>> TraverseTree(List<Tuple<Vector2, float>> houses)
