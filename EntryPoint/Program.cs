@@ -351,25 +351,41 @@ namespace EntryPoint
 
         //check all neighbours of the node, and set to smallest distances,
         while (unvisitedNodes.Count() > 0) { 
+            Console.WriteLine("*R* 1");
             foreach(Node2 neighbour in currentHouse.getNeighbours())
             {
+                Console.WriteLine("*R* 2");
                 if ((currentHouse.getDistance() + 1) < neighbour.getDistance())
                 {
+                    Console.WriteLine("*R* 3");
                     neighbour.setDistance(currentHouse.getDistance() + 1);
+                    Console.WriteLine("*R* 4");
                 }
+                Console.WriteLine("*R* 5");
             }
             currentHouse.setVisited();
             
+            Console.WriteLine("*R* 6");
             //check if there's any unvisited neighbours
-            if (currentHouse.getNeighbours().Any(k => k.getVisited() == true)) {
-                List<Node2> candidates = currentHouse.getNeighbours().FindAll(k => k.getVisited() == true);
-                Node2 nextHouse = currentHouse.getNeighbours().OrderBy(k => k.getDistance()).First();
+            int visitedIndex = currentHouse.getNeighbours().FindIndex(k => k.getVisited() == false);
+            if (visitedIndex >= 0) {
+                Console.WriteLine("*R* 7");
+                List<Node2> candidates = currentHouse.getNeighbours().FindAll(k => k.getVisited() == false);
+
+                Console.WriteLine("*R*: " + candidates[0]);
+
+                Node2 nextHouse = candidates.OrderBy(k => k.getDistance()).First();
+                
+                Console.WriteLine("*R* 8");
 
                 unvisitedNodes.Remove(currentHouse);
 
                 shortestRoute.Add(Tuple.Create(new Vector2(currentHouse.getX(), currentHouse.getY()), new Vector2(nextHouse.getX(), nextHouse.getY())));
                 Console.WriteLine("*R*" + shortestRoute[0].Item1 + " | " + shortestRoute[0].Item2);
                 currentHouse = nextHouse;
+            } else
+            {
+                break;
             }
         }
         return shortestRoute.ToList();

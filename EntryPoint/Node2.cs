@@ -9,6 +9,7 @@ public class Node2
     private List<Node2> Neighbours = new List<Node2>();
     private bool Visited = false;
     private int tent_distance = int.MaxValue;
+    private Node2 previouslyChecked;
 
     public Node2(Vector2 Coords)
 	{
@@ -57,13 +58,18 @@ public class Node2
         return tent_distance;
     }
 
-    public void addOneToDistance()
-    {
-        tent_distance++;
-    }
-
     public void setDistance(int dist)
     {
         tent_distance = dist;
+    }
+
+    public void setPreviouslyChecked(Node2 node)
+    {
+        previouslyChecked = node;
+    }
+
+    public Node2 getPreviouslyChecked()
+    {
+        return previouslyChecked;
     }
 }
