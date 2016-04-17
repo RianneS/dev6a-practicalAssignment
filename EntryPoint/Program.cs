@@ -256,6 +256,8 @@ namespace EntryPoint
     //End methods excercise 2
     private static Node2 firstNode;
     private static List<Node2> nodeList = new List<Node2>();
+    private static Node2 startingHouse;
+    private static Node2 destinationHouse;
 
     private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding, 
       Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
@@ -276,7 +278,8 @@ namespace EntryPoint
       //return fakeBestPath;
       createAdjacencyMatrix(roads);
 
-      List<Tuple<Vector2, Vector2>> bestPath = findShortestRoute(roads, startingBuilding, destinationBuilding);
+      List<Tuple<Vector2, Vector2>> Path = dijkstra(roads, startingBuilding, destinationBuilding);
+      List<Tuple<Vector2, Vector2>> bestPath = getShortestPath(Path);
       return bestPath;  //is List<Tuple<Vector2, Vector2>>
     }
     
@@ -336,21 +339,27 @@ namespace EntryPoint
         }
     }
 
-    private static List<Tuple<Vector2, Vector2>> findShortestRoute(IEnumerable<Tuple<Vector2, Vector2>> roads, Vector2 start, Vector2 destination)
+    private static List<Tuple<Vector2, Vector2>> dijkstra(IEnumerable<Tuple<Vector2, Vector2>> roads, Vector2 start, Vector2 destination)
     {
         List<Tuple<Vector2, Vector2>> shortestRoute = new List<Tuple<Vector2, Vector2>>();
-        Node2 startingHouse = nodeList.Find(r => r.getX() == start.X && r.getY() == start.Y);
-        Node2 destinationHouse = nodeList.Find(s => s.getX() == destination.X && s.getY() == destination.Y);
+        startingHouse = nodeList.Find(r => r.getX() == start.X && r.getY() == start.Y);
+        destinationHouse = nodeList.Find(s => s.getX() == destination.X && s.getY() == destination.Y);
         Node2 currentHouse = startingHouse;
         List<Node2> unvisitedNodes = nodeList;
 
-        startingHouse.setVisited();
         startingHouse.setDistance(0);
 
         Console.WriteLine("*R* New nodes for path thingy: " + startingHouse.getX() + ", " + startingHouse.getY() + " 2: " + destinationHouse.getX() + ", " + destinationHouse.getY());
 
         //check all neighbours of the node, and set to smallest distances,
         while (unvisitedNodes.Count() > 0) { 
+            //check if the current house is the same as the destination house
+            if (currentHouse.getX() == destinationHouse.getX() && currentHouse.getY() == destinationHouse.getY())
+            {
+                break;
+            }
+            
+            //Check the naighbours
             Console.WriteLine("*R* 1");
             foreach(Node2 neighbour in currentHouse.getNeighbours())
             {
@@ -367,11 +376,7 @@ namespace EntryPoint
             
             Console.WriteLine("*R* 6");
 
-            //check if the current house is the same as the destination house
-            if (currentHouse.getX() == destinationHouse.getX() && currentHouse.getY() == destinationHouse.getY())
-            {
-                break;
-            }
+            
             
             //check if there's any unvisited neighbours
             int visitedIndex = currentHouse.getNeighbours().FindIndex(k => k.getVisited() == false);
@@ -404,6 +409,21 @@ namespace EntryPoint
             }
         }
         return shortestRoute.ToList();
+    }
+
+    private static List<Tuple<Vector2, Vector2>> getShortestPath(List<Tuple<Vector2, Vector2>> path)
+    {
+        List<Tuple<Vector2, Vector2>> bestPath = new List<Tuple<Vector2, Vector2>>();
+        Node2 currentHouse = destinationHouse;
+
+        while (currentHouse.getX() == startingHouse.getX() && currentHouse.getY() == startingHouse.getY())
+        {
+            Node2 nextHouse = currentHouse.getNeighbours().OrderBy(k => k.getDistance()).First();
+            bestPath.Add(Tuple.Create(new Vector2(currentHouse.getX(), currentHouse.getY()), new Vector2(nextHouse.getX(), nextHouse.getY())));
+            currentHouse = nextHouse;
+        }
+
+        return bestPath;
     }
 
     private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding, 
