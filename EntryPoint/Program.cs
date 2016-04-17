@@ -276,7 +276,7 @@ namespace EntryPoint
       //return fakeBestPath;
       createAdjacencyMatrix(roads);
 
-      List<Tuple<Vector2, Vector2>>bestPath = findShortestRoute(roads, startingBuilding, destinationBuilding);
+      List<Tuple<Vector2, Vector2>> bestPath = findShortestRoute(roads, startingBuilding, destinationBuilding);
       return bestPath;  //is List<Tuple<Vector2, Vector2>>
     }
     
@@ -299,7 +299,7 @@ namespace EntryPoint
         {
             //if it is, get it from the list
             currentNode2 = nodeList[index];
-            Console.WriteLine("*R* 1st point exists; number" + index + " in the list");
+            //Console.WriteLine("*R* 1st point exists; number" + index + " in the list");
         }
         else
         {
@@ -311,7 +311,7 @@ namespace EntryPoint
             }
             nodeList.Add(newNode);
             currentNode2 = newNode;
-            Console.WriteLine("*R* 1st point doesn't exist, created");
+            //Console.WriteLine("*R* 1st point doesn't exist, created");
         }
         return currentNode2;
     }
@@ -324,7 +324,7 @@ namespace EntryPoint
         {
             //if it is, get it from the list and add it as a neighbour of the first point
             currentNode2.addNeighbour(nodeList[index2]);
-            Console.WriteLine("*R* 2nd point exists; number" + index2 + " in the list, added as neighbour");
+            //Console.WriteLine("*R* 2nd point exists; number" + index2 + " in the list, added as neighbour");
         }
         else
         {
@@ -332,19 +332,47 @@ namespace EntryPoint
             Node2 newNode = new Node2(road.Item2);
             currentNode2.addNeighbour(newNode);
             nodeList.Add(newNode);
-            Console.WriteLine("*R* 2nd point doesn't exist, created, added as neighbour");
+            //Console.WriteLine("*R* 2nd point doesn't exist, created, added as neighbour");
         }
     }
 
     private static List<Tuple<Vector2, Vector2>> findShortestRoute(IEnumerable<Tuple<Vector2, Vector2>> roads, Vector2 start, Vector2 destination)
     {
-        List<Tuple<Vector2, Vector2>>shortestRoute;
+        List<Tuple<Vector2, Vector2>> shortestRoute = new List<Tuple<Vector2, Vector2>>();
         Node2 startingHouse = nodeList.Find(r => r.getX() == start.X && r.getY() == start.Y);
         Node2 destinationHouse = nodeList.Find(s => s.getX() == destination.X && s.getY() == destination.Y);
-        
-        Console.WriteLine("*R* New nodes for path thingie" + startingHouse + " 2: " + destinationHouse);
-        
-        return roads.ToList();
+        Node2 currentHouse = startingHouse;
+        List<Node2> unvisitedNodes = nodeList;
+
+        startingHouse.setVisited();
+        startingHouse.setDistance(0);
+
+        Console.WriteLine("*R* New nodes for path thingy: " + startingHouse.getX() + ", " + startingHouse.getY() + " 2: " + destinationHouse.getX() + ", " + destinationHouse.getY());
+
+        //check all neighbours of the node, and set to smallest distances,
+        while (unvisitedNodes.Count() > 0) { 
+            foreach(Node2 neighbour in currentHouse.getNeighbours())
+            {
+                if ((currentHouse.getDistance() + 1) < neighbour.getDistance())
+                {
+                    neighbour.setDistance(currentHouse.getDistance() + 1);
+                }
+            }
+            currentHouse.setVisited();
+            
+            //check if there's any unvisited neighbours
+            if (currentHouse.getNeighbours().Any(k => k.getVisited() == true)) {
+                List<Node2> candidates = currentHouse.getNeighbours().FindAll(k => k.getVisited() == true);
+                Node2 nextHouse = currentHouse.getNeighbours().OrderBy(k => k.getDistance()).First();
+
+                unvisitedNodes.Remove(currentHouse);
+
+                shortestRoute.Add(Tuple.Create(new Vector2(currentHouse.getX(), currentHouse.getY()), new Vector2(nextHouse.getX(), nextHouse.getY())));
+                Console.WriteLine("*R*" + shortestRoute[0].Item1 + " | " + shortestRoute[0].Item2);
+                currentHouse = nextHouse;
+            }
+        }
+        return shortestRoute.ToList();
     }
 
     private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding, 

@@ -46,4 +46,24 @@ public class Node2
     {
         Visited = true;
     }
+
+    public bool getVisited()
+    {
+        return Visited;
+    }
+
+    public int getDistance()
+    {
+        return tent_distance;
+    }
+
+    public void addOneToDistance()
+    {
+        tent_distance++;
+    }
+
+    public void setDistance(int dist)
+    {
+        tent_distance = dist;
+    }
 }
