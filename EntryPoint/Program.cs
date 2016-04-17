@@ -366,13 +366,18 @@ namespace EntryPoint
             currentHouse.setVisited();
             
             Console.WriteLine("*R* 6");
+
+            //check if the current house is the same as the destination house
+            if (currentHouse.getX() == destinationHouse.getX() && currentHouse.getY() == destinationHouse.getY())
+            {
+                break;
+            }
+            
             //check if there's any unvisited neighbours
             int visitedIndex = currentHouse.getNeighbours().FindIndex(k => k.getVisited() == false);
             if (visitedIndex >= 0) {
                 Console.WriteLine("*R* 7");
                 List<Node2> candidates = currentHouse.getNeighbours().FindAll(k => k.getVisited() == false);
-
-                Console.WriteLine("*R*: " + candidates[0]);
 
                 Node2 nextHouse = candidates.OrderBy(k => k.getDistance()).First();
                 
@@ -380,12 +385,22 @@ namespace EntryPoint
 
                 unvisitedNodes.Remove(currentHouse);
 
+                nextHouse.setPreviouslyChecked(currentHouse);
+
                 shortestRoute.Add(Tuple.Create(new Vector2(currentHouse.getX(), currentHouse.getY()), new Vector2(nextHouse.getX(), nextHouse.getY())));
                 Console.WriteLine("*R*" + shortestRoute[0].Item1 + " | " + shortestRoute[0].Item2);
                 currentHouse = nextHouse;
             } else
             {
-                break;
+                //if there's no unvisited neighbours, go back one and check more, and deletes the last added path piece
+                currentHouse = currentHouse.getPreviouslyChecked();
+                shortestRoute.Remove(shortestRoute.Last());
+
+                //if the current house is the same as the destination house, it stops
+                if (currentHouse.getX() == destinationHouse.getX() && currentHouse.getY() == destinationHouse.getY())
+                {
+                    break;
+                }
             }
         }
         return shortestRoute.ToList();
