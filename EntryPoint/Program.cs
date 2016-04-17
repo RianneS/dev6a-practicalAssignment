@@ -359,41 +359,27 @@ namespace EntryPoint
                 break;
             }
             
-            //Check the naighbours
-            Console.WriteLine("*R* 1");
+            //Check the neighbours
             foreach(Node2 neighbour in currentHouse.getNeighbours())
             {
-                Console.WriteLine("*R* 2");
                 if ((currentHouse.getDistance() + 1) < neighbour.getDistance())
                 {
-                    Console.WriteLine("*R* 3");
                     neighbour.setDistance(currentHouse.getDistance() + 1);
-                    Console.WriteLine("*R* 4");
                 }
-                Console.WriteLine("*R* 5");
             }
             currentHouse.setVisited();
-            
-            Console.WriteLine("*R* 6");
+            unvisitedNodes.Remove(currentHouse);
 
-            
-            
+
             //check if there's any unvisited neighbours
             int visitedIndex = currentHouse.getNeighbours().FindIndex(k => k.getVisited() == false);
             if (visitedIndex >= 0) {
-                Console.WriteLine("*R* 7");
                 List<Node2> candidates = currentHouse.getNeighbours().FindAll(k => k.getVisited() == false);
-
                 Node2 nextHouse = candidates.OrderBy(k => k.getDistance()).First();
-                
-                Console.WriteLine("*R* 8");
-
-                unvisitedNodes.Remove(currentHouse);
 
                 nextHouse.setPreviouslyChecked(currentHouse);
-
                 shortestRoute.Add(Tuple.Create(new Vector2(currentHouse.getX(), currentHouse.getY()), new Vector2(nextHouse.getX(), nextHouse.getY())));
-                Console.WriteLine("*R*" + shortestRoute[0].Item1 + " | " + shortestRoute[0].Item2);
+                //Console.WriteLine("*R*" + shortestRoute[0].Item1 + " | " + shortestRoute[0].Item2);
                 currentHouse = nextHouse;
             } else
             {
@@ -413,13 +399,17 @@ namespace EntryPoint
 
     private static List<Tuple<Vector2, Vector2>> getShortestPath(List<Tuple<Vector2, Vector2>> path)
     {
+        Console.WriteLine("*R* Start ShortestPath");
         List<Tuple<Vector2, Vector2>> bestPath = new List<Tuple<Vector2, Vector2>>();
         Node2 currentHouse = destinationHouse;
+        
+        Console.WriteLine("*R* Distance destination" + destinationHouse.getDistance());
 
-        while (currentHouse.getX() == startingHouse.getX() && currentHouse.getY() == startingHouse.getY())
+        while (currentHouse.getDistance() != 0)
         {
             Node2 nextHouse = currentHouse.getNeighbours().OrderBy(k => k.getDistance()).First();
             bestPath.Add(Tuple.Create(new Vector2(currentHouse.getX(), currentHouse.getY()), new Vector2(nextHouse.getX(), nextHouse.getY())));
+            Console.WriteLine("*R* ShortestPath1: " + bestPath[0]);
             currentHouse = nextHouse;
         }
 
