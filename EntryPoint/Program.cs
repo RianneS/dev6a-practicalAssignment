@@ -187,7 +187,7 @@ namespace EntryPoint
                 InsertNode(newNode, currentRoot.getRightChild(), "X");
             }
         }
-        if (comparingOn == "X")         //This is the part that happens when it's comparing on X, it's almost identical to the part that happens for Y
+        if (comparingOn == "X") //This is the part that happens when it's comparing on X, it's almost identical to the part that happens for Y
             {
             if (newNode.getX() < currentRoot.getX())
             {
@@ -261,10 +261,10 @@ namespace EntryPoint
       Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
     {
       Console.WriteLine("*R*" + startingBuilding + " " + destinationBuilding);
-      foreach(Tuple<Vector2, Vector2> road in roads)
+      /*foreach(Tuple<Vector2, Vector2> road in roads)
             {
                 Console.WriteLine("*R* Road: " + road);
-            }
+            }*/
       //var startingRoad = roads.Where(x => x.Item1.Equals(startingBuilding)).First();
       //List<Tuple<Vector2, Vector2>> fakeBestPath = new List<Tuple<Vector2, Vector2>>() { startingRoad };
       //var prevRoad = startingRoad;
@@ -275,58 +275,74 @@ namespace EntryPoint
       //}
       //return fakeBestPath;
       createAdjacencyMatrix(roads);
-      List<Tuple<Vector2, Vector2>>bestPath = findShortestRoute(roads);
+
+      List<Tuple<Vector2, Vector2>>bestPath = findShortestRoute(roads, startingBuilding, destinationBuilding);
       return bestPath;  //is List<Tuple<Vector2, Vector2>>
     }
     
     private static void createAdjacencyMatrix(IEnumerable<Tuple<Vector2, Vector2>> roads)
     {
-        Node2 currentNode2 = firstNode;
         foreach(Tuple<Vector2, Vector2> road in roads)
         {
-            /*Console.WriteLine("*R* points to add, 1: " + road.Item1 + " 2: " + road.Item2);
-            //See if the first point of the road is in the list
-            int index = nodeList.FindIndex(p => p.getX() == road.Item1.X && p.getY() == road.Item1.Y);
-            if (index >= 0)
-            {
-                //if it is, get it from the list
-                currentNode2 = nodeList[index];
-                Console.WriteLine("*R* 1st point exists; number" + index + " in the list");
-            } else
-            {
-                //if it isn't, create the node and add it to the list
-                Node2 newNode = new Node2(road.Item1);
-                if (firstNode == null)                  //If first node is empty
-                {
-                    newNode = firstNode;
-                }
-                nodeList.Add(newNode);
-                Console.WriteLine("*R* 1st point doesn't exist, created");
-            }*/
-
-            //See if the second point of the road is in the list
-            Console.WriteLine("*R* X: " + road.Item2.X + ", Y: " + road.Item2.Y);
-            Console.WriteLine("*R* : ");
-            int index2 = nodeList.FindIndex(q => q.getX() == road.Item2.X && q.getY() == road.Item2.Y);
-            if (index2 >= 0)
-            {
-                //if it is, get it from the list and add it as a neighbour of the first point
-                currentNode2.addNeigbour(nodeList[index2]);
-                Console.WriteLine("*R* 2nd point exists; number" + index2 + " in the list, added as neighbour");
-            } else
-            {
-                //if it isn't, create it and add it as neighbour of the first point
-                Node2 newNode = new Node2(road.Item2);
-                currentNode2.addNeigbour(newNode);
-                nodeList.Add(newNode);
-                Console.WriteLine("*R* 2nd point doesn't exist, created, added as neighbour");
-            }       
+            Node2 currentNode2 = checkFirstPoint(road);
+            addNeighbour(currentNode2, road); 
         }
     }
-    
-    private static List<Tuple<Vector2, Vector2>> findShortestRoute(IEnumerable<Tuple<Vector2, Vector2>> roads)
+
+    private static Node2 checkFirstPoint(Tuple<Vector2, Vector2> road)
+    {
+        Node2 currentNode2;
+        Console.WriteLine("*R* points to add, 1: " + road.Item1 + " 2: " + road.Item2);
+        //See if the first point of the road is in the list
+        int index = nodeList.FindIndex(p => p != null && p.getX() == road.Item1.X && p.getY() == road.Item1.Y);
+        if (index >= 0)
+        {
+            //if it is, get it from the list
+            currentNode2 = nodeList[index];
+            Console.WriteLine("*R* 1st point exists; number" + index + " in the list");
+        }
+        else
+        {
+            //if it isn't, create the node and add it to the list
+            Node2 newNode = new Node2(road.Item1);
+            if (firstNode == null)                  //If first node is empty
+            {
+                firstNode = newNode;
+            }
+            nodeList.Add(newNode);
+            currentNode2 = newNode;
+            Console.WriteLine("*R* 1st point doesn't exist, created");
+        }
+        return currentNode2;
+    }
+
+    private static void addNeighbour(Node2 currentNode2, Tuple<Vector2, Vector2> road)
+    {
+        //See if the second point of the road is in the list
+        int index2 = nodeList.FindIndex(q => q != null && q.getX() == road.Item2.X && q.getY() == road.Item2.Y);
+        if (index2 >= 0)
+        {
+            //if it is, get it from the list and add it as a neighbour of the first point
+            currentNode2.addNeighbour(nodeList[index2]);
+            Console.WriteLine("*R* 2nd point exists; number" + index2 + " in the list, added as neighbour");
+        }
+        else
+        {
+            //if it isn't, create it and add it as neighbour of the first point
+            Node2 newNode = new Node2(road.Item2);
+            currentNode2.addNeighbour(newNode);
+            nodeList.Add(newNode);
+            Console.WriteLine("*R* 2nd point doesn't exist, created, added as neighbour");
+        }
+    }
+
+    private static List<Tuple<Vector2, Vector2>> findShortestRoute(IEnumerable<Tuple<Vector2, Vector2>> roads, Vector2 start, Vector2 destination)
     {
         List<Tuple<Vector2, Vector2>>shortestRoute;
+        Node2 startingHouse = nodeList.Find(r => r.getX() == start.X && r.getY() == start.Y);
+        Node2 destinationHouse = nodeList.Find(s => s.getX() == destination.X && s.getY() == destination.Y);
+        
+        Console.WriteLine("*R* New nodes for path thingie" + startingHouse + " 2: " + destinationHouse);
         
         return roads.ToList();
     }

@@ -6,8 +6,9 @@ using System.Linq;
 public class Node2
 {
     private Vector2 Coordinates;
-    private List<Node2> Neighbours;
+    private List<Node2> Neighbours = new List<Node2>();
     private bool Visited = false;
+    private int tent_distance = int.MaxValue;
 
     public Node2(Vector2 Coords)
 	{
@@ -31,7 +32,7 @@ public class Node2
         return X;
     }
 
-    public void addNeigbour(Node2 Neighbour)
+    public void addNeighbour(Node2 Neighbour)
     {
         Neighbours.Add(Neighbour);
     }
