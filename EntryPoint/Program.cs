@@ -254,10 +254,17 @@ namespace EntryPoint
      }
 
     //End methods excercise 2
+    private static Node2 firstNode;
+    private static List<Node2> nodeList;
 
     private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding, 
       Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
     {
+      Console.WriteLine("*R*" + startingBuilding + " " + destinationBuilding);
+      foreach(Tuple<Vector2, Vector2> road in roads)
+            {
+                Console.WriteLine("*R* Road: " + road);
+            }
       //var startingRoad = roads.Where(x => x.Item1.Equals(startingBuilding)).First();
       //List<Tuple<Vector2, Vector2>> fakeBestPath = new List<Tuple<Vector2, Vector2>>() { startingRoad };
       //var prevRoad = startingRoad;
@@ -267,17 +274,34 @@ namespace EntryPoint
       //  fakeBestPath.Add(prevRoad);
       //}
       //return fakeBestPath;
-      List<Tuple<Vector2, Vector2>>bestPath = findShortestRoute();
+      List<Tuple<Vector2, Vector2>>bestPath = findShortestRoute(roads);
       return bestPath;  //is List<Tuple<Vector2, Vector2>>
     }
-
-    private static List<Tuple<Vector2, Vector2>> findShortestRoute()
+    
+    private static List<List<Tuple<int, Vector2>>> createAdjacencyMatrix(IEnumerable<Tuple<Vector2, Vector2>> roads)
+    {
+        List<List<Tuple<int, Vector2>>> adjacencyMatrix;
+        float currentX = 0;
+        float currentY = 0;
+        foreach(Tuple<Vector2, Vector2> road in roads)
+        {
+            if (firstNode == null)
+            {
+                firstNode = new Node2(road.Item1);
+                nodeList.Add(firstNode);
+            }
+            currentX = road.Item1.X;
+            currentY = road.Item1.Y;
+            
+        }    
+    }
+    
+    private static List<Tuple<Vector2, Vector2>> findShortestRoute(IEnumerable<Tuple<Vector2, Vector2>> roads)
     {
         List<Tuple<Vector2, Vector2>>shortestRoute;
-
-        return shortestRoute;
+        
+        return roads.ToList();
     }
-
 
     private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding, 
       IEnumerable<Vector2> destinationBuildings, IEnumerable<Tuple<Vector2, Vector2>> roads)
